@@ -1,0 +1,701 @@
+CREATE TABLE Movies(
+Movie_Id NUMBER GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+Title VARCHAR2(50) NOT NULL,
+Publication_year int NOT NULL,
+Runtime VARCHAR2(20) NOT NULL,
+Distributes VARCHAR2(30) NOT NULL,
+Buget VARCHAR2(20) NOT NULL,
+Review DECIMAL(10,5) NOT NULL,
+User_Id NUMBER,FOREIGN KEY(User_Id) REFERENCES Movie_User(User_Id)
+);
+
+
+INSERT INTO Movies(Title,Publication_year,Runtime,Distributes,Buget,Review,User_Id)
+VALUES ('Bullet train', '2022','54m','Netflix','90 million','7.3','1');
+
+
+INSERT INTO Movies(Title,Publication_year,Runtime,Distributes,Buget,Review,User_Id)
+VALUES ('Endgame', '2019','3h:20m','Netflix','356 million','9.5','2');
+
+
+INSERT INTO Movies(Title,Publication_year,Runtime,Distributes,Buget,Review,User_Id)
+VALUES ('Infinity War', '2018','2h:29m','HBO','316 million','9.0','3');
+
+
+INSERT INTO Movies(Title,Publication_year,Runtime,Distributes,Buget,Review,User_Id)
+VALUES ('Mátrix', '1999','2h:16m','Netflix','63 million','8.2','4');
+
+
+INSERT INTO Movies(Title,Publication_year,Runtime,Distributes,Buget,Review,User_Id)
+VALUES ('The Dark Knight', '2008','2h:32m','HBO','185 million','9.0','5');
+
+
+INSERT INTO Movies(Title,Publication_year,Runtime,Distributes,Buget,Review,User_Id)
+VALUES ('Interstellar', '2014','2h:49m','HBO','165 million','8.6','6');
+
+
+INSERT INTO Movies(Title,Publication_year,Runtime,Distributes,Buget,Review,User_Id)
+VALUES ('Logan', '2008','2h:17m','HBO','120 million','8.1','7');
+
+
+INSERT INTO Movies(Title,Publication_year,Runtime,Distributes,Buget,Review,User_Id)
+VALUES ('In the Name of the King', '2007','2h:7m','Disney plus','60 million','3.8','8');
+
+
+INSERT INTO Movies(Title,Publication_year,Runtime,Distributes,Buget,Review,User_Id)
+VALUES ('Son of the Mask', '2005','1h:34m','Amazon prime','84 million','2.2','9');
+
+
+INSERT INTO Movies(Title,Publication_year,Runtime,Distributes,Buget,Review,User_Id)
+VALUES ('Knives Out', '2007','2h:10m','Apple tv','40 million','7.9','10');
+
+
+ Delete From Movies
+ where Movie_Id not in
+    (Select Min(Movie_Id)
+     From Movies
+     Group by Title,Publication_year,Runtime,Distributes,Buget,Review);
+
+--###########################
+--Movie table es a feltoltese 
+--###########################
+
+CREATE TABLE Movie_User(
+User_Id NUMBER GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+User_Name VARCHAR2(50) NOT NULL,
+User_Age int NOT NULL,
+User_Review DECIMAL(10,5) NOT NULL,
+Favorite_Movie VARCHAR2(50) NOT NULL
+);
+
+INSERT INTO Movie_User(User_Name,User_Age,User_Review,Favorite_Movie)
+VALUES ('David','21','6.5','Iron man');
+
+INSERT INTO Movie_User(User_Name,User_Age,User_Review,Favorite_Movie)
+VALUES ('Pistike','32','7.4','Logan');
+
+INSERT INTO Movie_User(User_Name,User_Age,User_Review,Favorite_Movie)
+VALUES ('Dani','31','8.5','Knives Out');
+
+INSERT INTO Movie_User(User_Name,User_Age,User_Review,Favorite_Movie)
+VALUES ('Zsolt','77','9','In the Name of the King');
+
+INSERT INTO Movie_User(User_Name,User_Age,User_Review,Favorite_Movie)
+VALUES ('Robert','57','5','Interstellar');
+
+INSERT INTO Movie_User(User_Name,User_Age,User_Review,Favorite_Movie)
+VALUES ('Mate','57','8.3','Bullet train');
+
+INSERT INTO Movie_User(User_Name,User_Age,User_Review,Favorite_Movie)
+VALUES ('Zsombor','20','2','Endgame');
+
+INSERT INTO Movie_User(User_Name,User_Age,User_Review,Favorite_Movie)
+VALUES ('Peter','25','7','Infinity War');
+
+INSERT INTO Movie_User(User_Name,User_Age,User_Review,Favorite_Movie)
+VALUES ('Istvan','50','6.5','The Dark Knight');
+
+INSERT INTO Movie_User(User_Name,User_Age,User_Review,Favorite_Movie)
+VALUES ('Luca','22','2.8','Mátrix');
+
+--/////////////////////////////////////////////////////////////
+CREATE TABLE Actor(
+Actor_Id NUMBER GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+Name VARCHAR2(100) NOT NULL,
+Age NUMBER(8,2) NOt NULL,
+Character_Name VARCHAR2(50) NOt NULL
+);
+
+INSERT INTO Actor(Name,Age,Character_Name)
+VALUES ('Hugh Jackman','54','Logan');
+
+
+INSERT INTO Actor(Name,Age,Character_Name)
+VALUES ('Robert John Downey','57','Iron man');
+
+
+INSERT INTO Actor(Name,Age,Character_Name)
+VALUES ('Brad Pitt','59','Ladybug');
+
+
+INSERT INTO Actor(Name,Age,Character_Name)
+VALUES ('Chris Evans','41','Captain america');
+
+
+INSERT INTO Actor(Name,Age,Character_Name)
+VALUES ('Scarlett Johansson','38','Black widow');
+
+
+INSERT INTO Actor(Name,Age,Character_Name)
+VALUES ('Chris Hemsworth','39','Thor');
+
+
+INSERT INTO Actor(Name,Age,Character_Name)
+VALUES ('Mark Ruffalo','55','Hulk');
+
+
+INSERT INTO Actor(Name,Age,Character_Name)
+VALUES ('Keanu Reeves','58','Neo');
+
+
+INSERT INTO Actor(Name,Age,Character_Name)
+VALUES ('Laurence Fishburne','61','Morpheus');
+
+
+INSERT INTO Actor(Name,Age,Character_Name)
+VALUES ('Christian Bale','48','Batman');
+
+
+INSERT INTO Actor(Name,Age,Character_Name)
+VALUES ('Morgan Freeman','85','Lucius Fox');
+
+
+INSERT INTO Actor(Name,Age,Character_Name)
+VALUES ('Alan Cumming','57','LOKI');
+
+
+INSERT INTO Actor(Name,Age,Character_Name)
+VALUES ('Jason Statham','55','Camden Konreid');
+
+
+INSERT INTO Actor(Name,Age,Character_Name)
+VALUES ('Matthew McConaughey','53','Joseph Cooper');
+
+
+INSERT INTO Actor(Name,Age,Character_Name)
+VALUES ('Chris Evans','40','Ransom Drysdale');
+
+--##########################
+--Actor table es a feltoltes
+--##########################
+
+CREATE TABLE Cast(
+Movie_Id NUMBER,FOREIGN KEY(Movie_Id) REFERENCES Movies(Movie_Id), 
+Actor_Id NUMBER,FOREIGN KEY(Actor_Id) REFERENCES  Actor(Actor_Id),
+Character_Type  VARCHAR2(100) NOT NULL
+);
+
+INSERT INTO Cast(Movie_Id,Actor_Id,Character_Type)
+VALUES ('1','3','Main character');
+
+INSERT INTO Cast(Movie_Id,Actor_Id,Character_Type)
+VALUES ('2','2','Main character');
+
+INSERT INTO Cast(Movie_Id,Actor_Id,Character_Type)
+VALUES ('3','4','Main character');
+
+INSERT INTO Cast(Movie_Id,Actor_Id,Character_Type)
+VALUES ('4','8','Main character');
+
+INSERT INTO Cast(Movie_Id,Actor_Id,Character_Type)
+VALUES ('5','10','Main character');
+
+INSERT INTO Cast(Movie_Id,Actor_Id,Character_Type)
+VALUES ('6','14','Main character');
+
+INSERT INTO Cast(Movie_Id,Actor_Id,Character_Type)
+VALUES ('7','1','Minor character');
+
+INSERT INTO Cast(Movie_Id,Actor_Id,Character_Type)
+VALUES ('8','13','Minor character');
+
+INSERT INTO Cast(Movie_Id,Actor_Id,Character_Type)
+VALUES ('9','12','Main character');
+
+INSERT INTO Cast(Movie_Id,Actor_Id,Character_Type)
+VALUES ('10','15','Main character');
+
+     
+--###################
+--Cast es feltoltes
+--###################
+
+
+CREATE TABLE Production_company(
+Company_id NUMBER GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+Company_Name VARCHAR2(100) NOT NULL
+);
+
+INSERT INTO Production_company(Company_Name)
+VALUES ('Warner Bros');  
+
+INSERT INTO Production_company(Company_Name)
+VALUES ('Marvel Studios');  
+
+INSERT INTO Production_company(Company_Name)
+VALUES ('Village Roadshow Pictures');  
+
+INSERT INTO Production_company(Company_Name)
+VALUES ('87North Productions Sony Pictures Entertainment');  
+
+INSERT INTO Production_company(Company_Name)
+VALUES ('Paramount Pictures');  
+
+INSERT INTO Production_company(Company_Name)
+VALUES ('Metro-Goldwyn-Mayer');  
+
+INSERT INTO Production_company(Company_Name)
+VALUES ('20th Century Studios');  
+
+INSERT INTO Production_company(Company_Name)
+VALUES ('Columbia Pictures'); 
+
+INSERT INTO Production_company(Company_Name)
+VALUES ('Castel Film Romania'); 
+
+INSERT INTO Production_company(Company_Name)
+VALUES ('Netflix'); 
+
+INSERT INTO Production_company(Company_Name)
+VALUES ('Sony Pictures Entertainment Motion Picture Group'); 
+
+INSERT INTO Production_company(Company_Name)
+VALUES ('DC Films'); 
+
+INSERT INTO Production_company(Company_Name)
+VALUES ('Brightlight Pictures'); 
+
+INSERT INTO Production_company(Company_Name)
+VALUES ('New Line Cinema'); 
+
+INSERT INTO Production_company(Company_Name)
+VALUES ('Media Rights Capital'); 
+
+
+Delete From Production_company
+where Company_id not in
+    (Select Min(Company_id)
+     From Production_company
+     Group by Company_Name);
+
+CREATE TABLE Movie_company(
+Movie_Id  NUMBER,FOREIGN KEY(Movie_Id) REFERENCES Movies(Movie_Id),
+Company_id NUMBER,FOREIGN KEY(Company_id) REFERENCES Production_company(Company_id)
+);
+
+INSERT INTO Movie_company(Movie_Id,Company_id)
+VALUES ('1','11');  
+
+INSERT INTO Movie_company(Movie_Id,Company_id)
+VALUES ('2','2');  
+
+INSERT INTO Movie_company(Movie_Id,Company_id)
+VALUES ('3','2');  
+
+INSERT INTO Movie_company(Movie_Id,Company_id)
+VALUES ('4','1'); 
+
+INSERT INTO Movie_company(Movie_Id,Company_id)
+VALUES ('5','12'); 
+
+INSERT INTO Movie_company(Movie_Id,Company_id)
+VALUES ('6','5'); 
+
+INSERT INTO Movie_company(Movie_Id,Company_id)
+VALUES ('7','2'); 
+
+INSERT INTO Movie_company(Movie_Id,Company_id)
+VALUES ('8','13'); 
+
+INSERT INTO Movie_company(Movie_Id,Company_id)
+VALUES ('9','14'); 
+
+INSERT INTO Movie_company(Movie_Id,Company_id)
+VALUES ('10','15');
+
+
+--###############################
+--Production_company es feltoltes
+--###############################
+
+--##################
+--Movie_company
+--##################
+
+CREATE TABLE Language(
+Language_Id  NUMBER GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+Language_Name VARCHAR2(100) NOT NULL,
+Language_Code VARCHAR2(100) NOT NULL
+);
+
+INSERT INTO Language(Language_Name,Language_Code)
+VALUES ('Hungarian','HU');    
+
+INSERT INTO Language(Language_Name,Language_Code)
+VALUES ('English','EN');  
+
+INSERT INTO Language(Language_Name,Language_Code)
+VALUES ('Chinese','CHN');  
+
+INSERT INTO Language(Language_Name,Language_Code)
+VALUES ('Russian','RU'); 
+
+INSERT INTO Language(Language_Name,Language_Code)
+VALUES ('Romanian','RO'); 
+
+INSERT INTO Language(Language_Name,Language_Code)
+VALUES ('German','DE'); 
+
+INSERT INTO Language(Language_Name,Language_Code)
+VALUES ('Spanish','ES'); 
+
+INSERT INTO Language(Language_Name,Language_Code)
+VALUES ('Norwegian','NB'); 
+
+INSERT INTO Language(Language_Name,Language_Code)
+VALUES ('Italian','IT'); 
+
+INSERT INTO Language(Language_Name,Language_Code)
+VALUES ('Japanese','JA'); 
+
+Delete From Language
+where Language_Id not in
+    (Select Min(Language_Id)
+     From Language
+     Group by Language_Name,Language_Code);
+
+CREATE TABLE Movie_Language(
+Movie_Id NUMBER,FOREIGN KEY(Movie_Id) REFERENCES Movies(Movie_Id),
+Language_Id  NUMBER,FOREIGN KEY(Language_Id) REFERENCES Language(Language_Id)
+);
+
+
+INSERT INTO  Movie_Language(Movie_Id,Language_Id)
+VALUES ('1','1');  
+
+INSERT INTO  Movie_Language(Movie_Id,Language_Id)
+VALUES ('2','1');  
+
+INSERT INTO  Movie_Language(Movie_Id,Language_Id)
+VALUES ('3','2');
+
+INSERT INTO  Movie_Language(Movie_Id,Language_Id)
+VALUES ('4','3'); 
+
+INSERT INTO  Movie_Language(Movie_Id,Language_Id)
+VALUES ('5','4'); 
+
+INSERT INTO  Movie_Language(Movie_Id,Language_Id)
+VALUES ('6','5'); 
+
+INSERT INTO  Movie_Language(Movie_Id,Language_Id)
+VALUES ('7','3'); 
+
+INSERT INTO  Movie_Language(Movie_Id,Language_Id)
+VALUES ('8','2'); 
+
+INSERT INTO  Movie_Language(Movie_Id,Language_Id)
+VALUES ('9','1'); 
+
+INSERT INTO  Movie_Language(Movie_Id,Language_Id)
+VALUES ('10','7');
+
+--#######################
+-- Movie_Language
+--#######################
+
+CREATE TABLE Country(
+Country_Id  NUMBER GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+Country_Name VARCHAR2(100) NOT NULL,
+Country_Code NUMBER(8,2) NOt NULL
+);
+
+
+INSERT INTO Country(Country_Name,Country_Code)
+VALUES ('Hungary','36');    
+
+INSERT INTO Country(Country_Name,Country_Code)
+VALUES ('England','44');  
+
+INSERT INTO Country(Country_Name,Country_Code)
+VALUES ('China','86');  
+
+INSERT INTO Country(Country_Name,Country_Code)
+VALUES ('Russia','7');  
+
+INSERT INTO Country(Country_Name,Country_Code)
+VALUES ('Romania','40');
+
+INSERT INTO Country(Country_Name,Country_Code)
+VALUES ('Spain','34');
+
+INSERT INTO Country(Country_Name,Country_Code)
+VALUES ('Norway','47');
+
+INSERT INTO Country(Country_Name,Country_Code)
+VALUES ('Italy','39');
+
+INSERT INTO Country(Country_Name,Country_Code)
+VALUES ('Japan','81');
+
+INSERT INTO Country(Country_Name,Country_Code)
+VALUES ('Germany','49');
+
+INSERT INTO Country(Country_Name,Country_Code)
+VALUES ('United States of America','1');  
+
+INSERT INTO Country(Country_Name,Country_Code)
+VALUES ('Mexico','52');  
+
+INSERT INTO Country(Country_Name,Country_Code)
+VALUES ('Canada','1');  
+
+INSERT INTO Country(Country_Name,Country_Code)
+VALUES ('Australia','61');  
+
+Delete From Country
+where Country_Id not in
+    (Select Min(Country_Id)
+     From Country
+     Group by Country_Name,Country_Code);
+
+CREATE TABLE Production_Country(
+Movie_Id NUMBER,FOREIGN KEY(Movie_Id) REFERENCES Movies(Movie_Id),
+Country_Id  NUMBER,FOREIGN KEY(Country_Id) REFERENCES Country(Country_Id)
+);
+
+INSERT INTO  Production_Country(Movie_Id,Country_Id)
+VALUES ('1','11');
+
+INSERT INTO  Production_Country(Movie_Id,Country_Id)
+VALUES ('2','9');
+
+INSERT INTO  Production_Country(Movie_Id,Country_Id)
+VALUES ('3','11');
+
+INSERT INTO  Production_Country(Movie_Id,Country_Id)
+VALUES ('4','11');
+
+INSERT INTO  Production_Country(Movie_Id,Country_Id)
+VALUES ('5','11');
+
+INSERT INTO  Production_Country(Movie_Id,Country_Id)
+VALUES ('6','2');
+
+INSERT INTO  Production_Country(Movie_Id,Country_Id)
+VALUES ('7','12');
+
+INSERT INTO  Production_Country(Movie_Id,Country_Id)
+VALUES ('8','13');
+
+INSERT INTO  Production_Country(Movie_Id,Country_Id)
+VALUES ('9','14');
+
+INSERT INTO  Production_Country(Movie_Id,Country_Id)
+VALUES ('10','11');
+
+--###################
+-- Production_Country
+--###################
+
+
+CREATE TABLE Director(
+Director_Id  NUMBER GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+Director_Last_Name VARCHAR2(100) NOT NULL,
+Director_Frist_Name VARCHAR2(100) NOT NULL,
+Awards VARCHAR2(100) NOT NULL
+);
+
+INSERT INTO Director(Director_Last_Name,Director_Frist_Name,Awards)
+VALUES ('James','Mangold','Amanda,Grand Prix Asturias,Hollywood Film Award');    
+
+INSERT INTO Director(Director_Last_Name,Director_Frist_Name,Awards)
+VALUES ('Lana','Wachowski','Saturn Award,Jury Special Prize,Yoga Award'); 
+
+INSERT INTO Director(Director_Last_Name,Director_Frist_Name,Awards)
+VALUES ('Christopher','Nolan','AACTA International Award,Saturn Award,Golden Eddie Filmmaker of the Year Award'); 
+
+INSERT INTO Director(Director_Last_Name,Director_Frist_Name,Awards)
+VALUES ('Anthony','Russo','Primetime Emmy,CinemaCon Award,Gold Derby TV Award'); 
+
+INSERT INTO Director(Director_Last_Name,Director_Frist_Name,Awards)
+VALUES ('Joe','Russo','Primetime Emmy,Dragon Award,Gold Derby TV Award'); 
+
+INSERT INTO Director(Director_Last_Name,Director_Frist_Name,Awards)
+VALUES ('David','Leitch','CinEuphoria,Taurus Award'); 
+
+INSERT INTO Director(Director_Last_Name,Director_Frist_Name,Awards)
+VALUES ('Rian','Johnson','Saturn Award,ASECAN Award,AFCA Award'); 
+
+INSERT INTO Director(Director_Last_Name,Director_Frist_Name,Awards)
+VALUES ('Uwe','Boll','Best Special Effects,Razzie Award,Stinker Award'); 
+
+INSERT INTO Director(Director_Last_Name,Director_Frist_Name,Awards)
+VALUES ('Thomas','Anderson','BAFTA Film Award,Felix,AFCC Award,Silver Berlin Bear'); 
+
+INSERT INTO Director(Director_Last_Name,Director_Frist_Name,Awards)
+VALUES ('Nicolas','Refn','Amanda,COFCA Award,Dublin Film Critics Circle Awards'); 
+
+INSERT INTO Director(Director_Last_Name,Director_Frist_Name,Awards)
+VALUES ('Lawrence','Guterman','Grand Award');
+
+Delete From Director
+where Director_Id not in
+    (Select Min(Director_Id)
+     From Director
+     Group by Director_Frist_Name,Director_Last_Name);
+
+CREATE TABLE Movie_Director(
+Movie_Id NUMBER,FOREIGN KEY(Movie_Id) REFERENCES Movies(Movie_Id),
+Director_Id  NUMBER,FOREIGN KEY(Director_Id) REFERENCES Director(Director_Id )
+);
+
+INSERT INTO  Movie_Director(Movie_Id,Director_Id)
+VALUES ('1','6');
+
+INSERT INTO  Movie_Director(Movie_Id,Director_Id)
+VALUES ('2','4');
+
+INSERT INTO  Movie_Director(Movie_Id,Director_Id)
+VALUES ('3','5');
+
+INSERT INTO  Movie_Director(Movie_Id,Director_Id)
+VALUES ('4','2');
+
+INSERT INTO  Movie_Director(Movie_Id,Director_Id)
+VALUES ('5','3');
+
+INSERT INTO  Movie_Director(Movie_Id,Director_Id)
+VALUES ('6','3');
+
+INSERT INTO  Movie_Director(Movie_Id,Director_Id)
+VALUES ('7','1');
+
+INSERT INTO  Movie_Director(Movie_Id,Director_Id)
+VALUES ('8','8');
+
+INSERT INTO  Movie_Director(Movie_Id,Director_Id)
+VALUES ('9','1');
+
+INSERT INTO  Movie_Director(Movie_Id,Director_Id)
+VALUES ('10','7');
+
+CREATE TABLE Categories(
+Categories_Id  NUMBER GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+Categories_Name VARCHAR2(100) NOT NULL
+);
+
+INSERT INTO Categories(Categories_Name)
+VALUES ('Action');
+
+INSERT INTO Categories(Categories_Name)
+VALUES ('Adventure ');
+
+INSERT INTO Categories(Categories_Name)
+VALUES ('Comedy');
+
+INSERT INTO Categories(Categories_Name)
+VALUES ('Drama');
+
+INSERT INTO Categories(Categories_Name)
+VALUES ('Fantasy'); 
+
+INSERT INTO Categories(Categories_Name)
+VALUES ('Horror');
+
+INSERT INTO Categories(Categories_Name)
+VALUES ('Musical');
+
+INSERT INTO Categories(Categories_Name)
+VALUES ('Mystery');
+
+INSERT INTO Categories(Categories_Name)
+VALUES ('Romance');
+
+INSERT INTO Categories(Categories_Name)
+VALUES ('Sports');
+
+INSERT INTO Categories(Categories_Name)
+VALUES ('Thriller');
+
+INSERT INTO Categories(Categories_Name)
+VALUES ('Western');
+
+INSERT INTO Categories(Categories_Name)
+VALUES ('War');
+
+INSERT INTO Categories(Categories_Name)
+VALUES ('Biographical');
+
+INSERT INTO Categories(Categories_Name)
+VALUES ('Sci-Fi');
+
+INSERT INTO Categories(Categories_Name)
+VALUES ('Crime');
+
+Delete From Categories
+where Categories_Id not in
+    (Select Min(Categories_Id)
+     From Categories
+     Group by Categories_Name);
+
+CREATE TABLE Movie_Categories(
+Movie_Id NUMBER,FOREIGN KEY(Movie_Id) REFERENCES Movies(Movie_Id),
+Categories_Id  NUMBER,FOREIGN KEY(Categories_Id) REFERENCES Categories(Categories_Id )
+);
+
+INSERT INTO Movie_Categories(Movie_Id,Categories_Id)
+VALUES ('1','1');
+
+INSERT INTO Movie_Categories(Movie_Id,Categories_Id)
+VALUES ('2','15');
+
+INSERT INTO Movie_Categories(Movie_Id,Categories_Id)
+VALUES ('3','1');
+
+INSERT INTO Movie_Categories(Movie_Id,Categories_Id)
+VALUES ('4','15');
+
+INSERT INTO Movie_Categories(Movie_Id,Categories_Id)
+VALUES ('5','1');
+
+INSERT INTO Movie_Categories(Movie_Id,Categories_Id)
+VALUES ('6','15');
+
+INSERT INTO Movie_Categories(Movie_Id,Categories_Id)
+VALUES ('7','1');
+
+INSERT INTO Movie_Categories(Movie_Id,Categories_Id)
+VALUES ('8','5');
+
+INSERT INTO Movie_Categories(Movie_Id,Categories_Id)
+VALUES ('9','3');
+
+INSERT INTO Movie_Categories(Movie_Id,Categories_Id)
+VALUES ('10','16');
+
+
+-- drop table 
+drop table Movies; 
+drop table Movie_User;
+drop table Actor;
+drop table cast;
+drop table Production_company; 
+drop table Movie_company;
+drop table Language;
+drop table  Movie_Language;
+drop table  Country;
+drop table Production_Country;
+drop table Director;
+drop table Movie_Director;
+drop table Categories;
+drop table Movie_Categories;
+
+
+--SELECT TABLE
+Select *from Movies; 
+Select *from Movie_User;
+Select *from Actor;
+Select *from cast;
+Select *from Production_company; 
+Select *from Movie_company;
+Select *from Language;
+Select *from  Movie_Language;
+Select *from  Country;
+Select *from Production_Country;
+Select *from Director;
+Select *from Movie_Director;
+Select *from Categories;
+Select *from Movie_Categories;
+
+Commit;

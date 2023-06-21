@@ -1,0 +1,132 @@
+CREATE TABLE `new_project`.`movie_user` (
+  `User_Id` INT NOT NULL,
+  `User_Name` VARCHAR(45) NULL,
+  `User_Age` VARCHAR(45) NULL,
+  `User_Review` INT NULL,
+  `Favorite_Movie` VARCHAR(45) NULL,
+  PRIMARY KEY (`User_Id`));
+
+
+CREATE TABLE `new_project`.`actor` (
+  `Actor_Id` INT NOT NULL,
+  `Name` VARCHAR(45) NULL,
+  `Age` INT NULL,
+  `Character_Name` VARCHAR(45) NULL,
+  PRIMARY KEY (`Actor_Id`));
+
+
+
+CREATE TABLE `new_project`.`cast` (
+  `Movie_Id` INT NULL,
+  `Actor_Id` INT NULL,
+  `Character_Type` VARCHAR(45) NULL);
+
+
+CREATE TABLE `new_project`.`production_company` (
+  `Company_id` INT NOT NULL,
+  `Company_Name` VARCHAR(45) NULL,
+  PRIMARY KEY (`Company_id`));
+
+
+CREATE TABLE `new_project`.`movie_company` (
+  `Movie_Id` INT NULL,
+  `Company_id` INT NULL);
+
+
+show databases;
+use new_project;
+drop table movies;
+Alter table movies modify User_Id INT;
+Alter table movie_user modify User_Review Decimal;
+describe  movies;
+ALTER Table movies add constraint foreign key(User_Id) REFERENCES Movie_User(User_Id);
+ALTER Table cast add constraint foreign key(Movie_Id) REFERENCES Movies(Movie_Id);
+ALTER Table cast add constraint foreign key(Actor_Id) REFERENCES  Actor(Actor_Id);
+describe  cast;
+
+
+CREATE TABLE `new_project`.`language` (
+  `Language_Id` INT NOT NULL,
+  `Language_Name` VARCHAR(45) NULL,
+  `Language_Code` VARCHAR(45) NULL,
+  PRIMARY KEY (`Language_Id`))
+
+
+CREATE TABLE `new_project`.`movie_language` (
+  `Movie_Id` INT NULL,
+  `Language_Id` INT NULL);
+
+
+CREATE TABLE `new_project`.`country` (
+  `Country_Id` INT NOT NULL,
+  `Country_Name` VARCHAR(45) NULL,
+  `Country_Code` VARCHAR(45) NULL,
+  PRIMARY KEY (`Country_Id`));
+
+
+
+CREATE TABLE `new_project`.`production_country` (
+  `Movie_Id` INT NULL,
+  `Country_Id` INT NULL);
+
+
+
+CREATE TABLE `new_project`.` director` (
+  `Director_Id` INT NOT NULL,
+  `Director_Last_Name` VARCHAR(45) NULL,
+  `Director_Frist_Name` VARCHAR(45) NULL,
+  `Awards` VARCHAR(45) NULL,
+  PRIMARY KEY (`Director_Id`));
+
+
+
+
+CREATE TABLE `new_project`.`movie_director` (
+  `Movie_Id` INT NULL,
+  `Director_Id` INT NULL);
+
+
+
+
+CREATE TABLE `new_project`.`categories` (
+  `Categories_Id` INT NOT NULL,
+  `Categories_Name` VARCHAR(45) NULL,
+  PRIMARY KEY (`Categories_Id`));
+
+
+CREATE TABLE `new_project`.`movie_categories` (
+  `Movie_Id` INT NULL,
+  `movie_categoriescol` INT NULL);
+
+
+show databases;
+use new_project;
+drop table movies;
+Alter table movies modify User_Id INT;
+Alter table movie_user modify User_Review Decimal;
+describe  movies;
+ALTER Table movies add constraint foreign key(User_Id) REFERENCES Movie_User(User_Id);
+ALTER Table cast add constraint foreign key(Movie_Id) REFERENCES Movies(Movie_Id);
+ALTER Table cast add constraint foreign key(Actor_Id) REFERENCES  Actor(Actor_Id);
+describe  cast;
+ALTER Table movie_company add constraint foreign key(Movie_Id) REFERENCES Movies(Movie_Id);
+ALTER Table movie_company add constraint foreign key(Company_id) REFERENCES  production_company(Company_id);
+describe  movie_company;
+ALTER Table movie_language add constraint foreign key(Movie_Id) REFERENCES Movies(Movie_Id);
+ALTER Table movie_language add constraint foreign key(Language_Id) REFERENCES  language(Language_Id);
+describe  movie_language;
+ALTER Table movie_director add constraint foreign key(Movie_Id) REFERENCES Movies(Movie_Id);
+ALTER Table movie_director add constraint foreign key(Director_Id) REFERENCES  director(Director_Id);
+describe  movie_director;
+ALTER Table movie_categories add constraint foreign key(Movie_Id) REFERENCES Movies(Movie_Id);
+ALTER Table movie_categories add constraint foreign key(Categories_Id) REFERENCES  categories(Categories_Id);
+describe  movie_categories;
+
+
+
+
+
+
+
+
+

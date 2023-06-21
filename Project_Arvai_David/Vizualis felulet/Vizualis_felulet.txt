@@ -1,0 +1,92 @@
+using Teszt10.Models;
+
+namespace Teszt10
+{
+    public partial class Form1 : Form
+    {
+        public Form1()
+        {
+            InitializeComponent();
+            feltoltGrid();
+        }
+
+        private void feltoltGrid()
+        {
+            using (var db = new ModelContext())
+            {
+                dataGridView1.DataSource = db.Actors.OrderBy(p => p.Name).ToList();
+            }
+        }
+
+        private void buttonInsert_Click(object sender, EventArgs e)
+        {
+            using (var db = new ModelContext())
+            {
+                var ujActor = new Actor
+                {
+                    Name = textBoxNev.Text,
+                    Age = int.Parse(textBoxEletkor.Text),
+                    Character_Name = textCharacter_Name.Text
+                };
+
+                db.Actors!.Add(ujActor);
+                db.SaveChanges();
+            }
+            feltoltGrid();
+            textBoxNev.Text = "";
+            textBoxEletkor.Text = "";
+            textCharacter_Name.Text = "";
+        }
+
+        int Actor_ID;
+        private void dataGridView1_SelectionChanged(object sender, EventArgs e)
+        {
+            if (dataGridView1.SelectedRows.Count != 1)
+            {
+                return;
+            }
+            DataGridViewRow row = dataGridView1.SelectedRows[0];
+            Actor_ID = Convert.ToInt32(row.Cells[0].Value);
+            using (var db = new ModelContext())
+            {
+                Actor keresettActor = db.Actors!.Find(Actor_ID);
+                textBoxNev.Text = keresettActor.Name;
+                textBoxEletkor.Text = keresettActor.Age.ToString();
+                textCharacter_Name.Text = keresettActor.Character_Name;
+
+            }
+        }
+
+        private void buttonUpdate_Click(object sender, EventArgs e)
+        {
+            using (var db = new ModelContext())
+            {
+                Actor keresettActor = db.Actors!.Find(Actor_ID);
+                keresettActor.Name = textBoxNev.Text;
+                keresettActor.Age = int.Parse(textBoxEletkor.Text);
+                keresettActor.Character_Name = textCharacter_Name.Text;
+                db.SaveChanges();
+            }
+            feltoltGrid();
+            textBoxNev.Text = "";
+            textBoxEletkor.Text = "";
+            textCharacter_Name.Text = "";
+        }
+
+        private void buttonDelete_Click(object sender, EventArgs e)
+        {
+            using (var db = new ModelContext())
+            {
+                Actor keresettActor = db.Actors!.Find(Actor_ID);
+                db.Actors.Remove(keresettActor);
+                keresettActor.Character_Name = textCharacter_Name.Text;
+                db.SaveChanges();
+            }
+            feltoltGrid();
+            textBoxNev.Text = "";
+            textBoxEletkor.Text = "";
+            textCharacter_Name.Text = "";
+        }
+
+    }
+}

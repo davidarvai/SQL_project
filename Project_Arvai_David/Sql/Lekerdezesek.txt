@@ -1,0 +1,394 @@
+--Megnovelem a film erteket 1.5 el
+SELECT movie_id,title,review,ROUND(review+1.5) increase
+FROM movies;
+
+--Kiirja az adott dijal rendelkezo rendezok filmjeit 
+
+Select movies.Title,movies.runtime,movies.publication_year,movies.distributes,movies.review,Director.Director_Last_Name,Director.Director_Frist_Name,Director.Awards
+From Director
+join Movie_Director
+on Movie_Director.Director_Id = Director.Director_Id
+join movies
+on movies.movie_id = Movie_Director.Movie_Id
+Where Director.Awards = 'Saturn Award';
+
+--Az adott bugetel rendelkezo filmeket
+
+SELECT title,movies.review,movies.buget
+FROM movies
+where movies.buget ='90 million';
+
+
+--A film keresese rendezo alapjan
+
+Select movies.Title,movies.runtime,movies.publication_year,movies.distributes,movies.review,Director.Director_Last_Name,Director.Director_Frist_Name,Director.Awards
+From Director
+join Movie_Director
+on Movie_Director.Director_Id = Director.Director_Id
+join movies
+on movies.movie_id = Movie_Director.Movie_Id
+WHERE Director_Frist_Name = 'Nolan';
+
+
+
+--2008 tol ujabb filmek kiirasa az ertekelesel
+
+SELECT title, review,Publication_year
+FROM movies
+WHERE Publication_year > '2008'
+ORDER BY Publication_year DESC;
+
+--A legidosebb szinesz
+Select Name,Max(Age)
+From Actor; 
+
+--Szinesz neve alapjan film kereses
+Select  movies.Title,movies.runtime,movies.publication_year,movies.distributes,movies.review,actor.name,actor.age,actor.character_name
+From actor
+join cast
+on cast.actor_id = actor.actor_id
+join movies
+on movies.movie_id = cast.movie_id
+where actor.name ='Robert John Downey';
+
+--Szineszek felsorolva
+Select Name,age
+From actor
+Order by age desc;
+
+
+--9 nagyobb filmek ertekelese
+Select Title,publication_year,distributes,review
+From movies
+Where review > 9;
+
+
+--3 nal kisebben ertekelt filmek
+Select Title,publication_year,distributes,review
+From movies
+Where review < 3;
+
+--Milyen filmhez milyen szinesz tartozik
+Select  a.actor_id,a.movie_id, b.movie_id, b.Title
+From cast a join movies b
+on a.Movie_Id = b.Movie_Id;
+
+
+--Kilistaza a filmeket es a szereplo szineszek adatait
+Select  movies.Title,movies.runtime,movies.publication_year,movies.distributes,movies.review,actor.name,actor.age,actor.character_name
+From actor
+join cast
+on cast.actor_id = actor.actor_id
+join movies
+on movies.movie_id = cast.movie_id;
+
+
+
+
+--Kilistaza a filmeket es a keszito ceg adatait
+Select movies.Title,movies.runtime,movies.publication_year,movies.distributes,movies.review,Production_company.Company_Name
+From Production_company
+join Movie_company
+on Movie_company.Company_id = Production_company.Company_id
+join movies
+on movies.movie_id = Movie_company.movie_id;
+
+
+--Kilistaza a filmeket es a nyelveket amin megtekintheto
+Select movies.Title,movies.runtime,movies.publication_year,movies.distributes,movies.review,Language.Language_Name,Language.Language_Code
+From Language
+join Movie_Language
+on Movie_Language.Language_Id = Language.Language_Id
+join movies
+on movies.movie_id = Movie_Language.Movie_Id;
+
+
+--Kilistaza a filmeket es az orszagot ahol keszult
+Select movies.Title,movies.runtime,movies.publication_year,movies.distributes,movies.review,Country.Country_Name,Country.Country_Code
+From Country
+join Production_Country
+on Production_Country.Country_Id = Country.Country_Id
+join movies
+on movies.movie_id = Production_Country.Movie_Id;
+
+
+--Kilistaza a filmeket es a rendzot es a rendezo adatait
+Select movies.Title,movies.runtime,movies.publication_year,movies.distributes,movies.review,Director.Director_Last_Name,Director.Director_Frist_Name,Director.Awards
+From Director
+join Movie_Director
+on Movie_Director.Director_Id = Director.Director_Id
+join movies
+on movies.movie_id = Movie_Director.Movie_Id;
+
+--Kilistaza a filmeket es a kategoriakat
+Select movies.Title,movies.runtime,movies.publication_year,movies.distributes,movies.review,Categories.Categories_Name
+From Categories
+join Movie_Categories
+on Movie_Categories.Categories_Id = Categories.Categories_Id
+join movies
+on movies.movie_id = Movie_Categories.Movie_Id;
+
+--kilistaz egy adott filmet es meg adja a foszereplot 
+Select  movies.Title,movies.runtime,movies.publication_year,movies.distributes,movies.review,actor.name,actor.age,actor.character_name
+From actor
+join cast
+on cast.actor_id = actor.actor_id
+join movies
+on movies.movie_id = cast.movie_id
+Order by review desc
+Fetch first row only;
+
+
+--Legregebbi filmet
+Select Title as "Legregebbi_Film",max(Publication_year) as "Megjelenesi Ido"
+From movies group by Title
+Order by max(Publication_year) asc
+Fetch first row only;
+
+
+
+--A legujabb filmet irja ki
+Select Title as "Legujabb_Film",max(Publication_year) as "Megjelenesi Ido"
+From movies group by Title
+Order by max(Publication_year) desc
+Fetch first row only;
+
+
+
+--Kategoria szerint keresunk filmet
+Select movies.Title,movies.runtime,movies.publication_year,movies.distributes,movies.review,Categories.Categories_Name
+From Categories
+join Movie_Categories
+on Movie_Categories.Categories_Id = Categories.Categories_Id
+join movies
+on movies.movie_id = Movie_Categories.Movie_Id
+where Categories_Name = 'Action' 
+Order by review desc;
+
+--============= MODERN SGL =================
+
+--Userek es kedvenc filmjeik
+
+SELECT User_Name, User_Age,Favorite_Movie
+FROM Movie_User d,
+LATERAL (SELECT title,Publication_year,Runtime
+         FROM Movies e
+         WHERE e.User_Id = d.User_Id)
+ORDER BY 1, 2;
+
+
+--Azok a userek akik ertekelese nagyobb mint 8 
+SELECT User_Name, User_Age,Favorite_Movie
+FROM Movie_User d
+CROSS APPLY (SELECT title,Publication_year,Runtime
+             FROM Movies e
+             WHERE Review >= 8
+             AND e.User_Id = d.User_Id)
+ORDER BY 1, 2, 3;
+
+
+--A legidosebb szinesztt irja ki
+
+WITH
+x AS
+(SELECT age
+ FROM Actor
+GROUP BY age
+HAVING COUNT(*)=1)
+
+SELECT MAX(age)
+FROM x;
+
+--Evekre lebontva az ertekelesek atlaga
+
+SELECT Publication_year, AVG(review) FROM movies
+GROUP BY Publication_year
+ORDER BY Publication_year;
+
+--ABC sorendbe rendezi a szineszek nevet
+
+select substr(Name,1,1),
+listagg (Name, ',') WITHIN GROUP (ORDER BY Name) st_nms
+FROM Actor
+GROUP BY substr(Name,1,1);
+
+
+--Listagg hasznalata es a szineszek kilistazasa
+
+SELECT Actor_Id, LISTAGG(DISTINCT Name, ',') AS Szinesz_Nev
+FROM Actor
+GROUP BY Actor_Id
+ORDER BY Actor_Id;
+
+--Kiirja a filmeket a buget szerint rendezve
+
+SELECT *
+FROM (
+      SELECT *
+      FROM movies
+      ORDER BY Buget DESC
+      )
+WHERE rownum <= 10;
+
+
+
+--Adott szamu usereknek kiirja az adatait
+
+SELECT *
+FROM (
+      SELECT *
+      FROM Movie_User
+      ORDER BY User_Review DESC
+      )
+WHERE rownum <= 8;
+
+
+-- Kiirja azokat a cimeket 3 spacet tartalmaz vagy egyetse
+
+Select Title as Cim,Publication_year
+From Movies
+Where Title like '% % %' and Title not like '% % % %' or Title not like '% %';
+
+
+--Kilistaza a filmeket es haza tartozo nyelveket
+
+Select movies.Title,movies.runtime,movies.publication_year,movies.distributes,movies.review,Language.Language_Name,Language.Language_Code
+From Language
+join Movie_Language
+on Movie_Language.Language_Id = Language.Language_Id
+join movies
+on movies.movie_id = Movie_Language.Movie_Id
+where Language_Name = 'Hungarian' or Language_Name = 'English';
+
+--Az erteket atirja % ba
+
+SELECT Title||' Film cim '||Review||' Ertekeles '|| Review*10/100 || '%' "Szazalekos Ertekeles"
+FROM Movies;
+
+
+--Annyi csilagot ir ki a hany betutt tartalmaz a film cime
+
+SELECT Title ||' '||rpad(' ', ROUND(Review), '*') Csilagal_Ertekelve
+FROM Movies
+ORDER BY Review DESC;
+
+
+--Felkerekiti az ertekelest
+
+Select title,Round(review)
+From movies;
+
+
+--Max es minimum ertekeles
+
+SELECT Title, MAX(Review),MIN(Review),ROUND(AVG(Review),0)
+FROM Movies group by Title;
+
+
+--Atlag ertekeles
+
+SELECT MAX(Review) - MIN(Review) A_Legnagyobb_Kulombseg_Az_Ertekelesek_Kozott
+FROM Movies;
+
+-- Kirja az adott felhasznalo kedvec filmjet es adjat
+
+SELECT Title,User_Id
+FROM Movies
+WHERE User_Id= (SELECT User_Id
+                        FROM Movie_User
+                        WHERE User_Name ='David');
+                        
+ 
+-- ============= Explain Plan ===============
+ 
+EXPLAIN PLAN FOR WITH
+x AS
+(SELECT age
+ FROM Actor
+GROUP BY age
+HAVING COUNT(*)=1)
+
+SELECT MAX(age)
+FROM x;
+
+Select * from Table(DBMS_XPLAN.DISPLAY);    
+
+
+
+EXPLAIN PLAN FOR SELECT User_Name, User_Age,Favorite_Movie
+FROM Movie_User d
+CROSS APPLY (SELECT title,Publication_year,Runtime
+             FROM Movies e
+             WHERE Review >= 8
+             AND e.User_Id = d.User_Id)
+ORDER BY 1, 2, 3;
+
+
+
+EXPLAIN PLAN FOR  SELECT Actor_Id, LISTAGG(DISTINCT Name, ',') AS Szinesz_Nev
+FROM Actor
+GROUP BY Actor_Id
+ORDER BY Actor_Id;
+
+Select * from Table(DBMS_XPLAN.DISPLAY);
+
+
+EXPLAIN PLAN FOR Select movies.Title,movies.runtime,movies.publication_year,movies.distributes,movies.review,Categories.Categories_Name
+From Categories
+join Movie_Categories
+on Movie_Categories.Categories_Id = Categories.Categories_Id
+join movies
+on movies.movie_id = Movie_Categories.Movie_Id
+where Categories_Name = 'Action' 
+Order by review desc;
+
+
+
+
+EXPLAIN PLAN FOR Select Title as "Legregebbi_Film",max(Publication_year) as "Megjelenesi Ido"
+From movies group by Title
+Order by max(Publication_year) asc
+Fetch first row only;
+
+
+Select * from Table(DBMS_XPLAN.DISPLAY);
+
+
+
+EXPLAIN PLAN FOR Select movies.Title,movies.runtime,movies.publication_year,movies.distributes,movies.review,Production_company.Company_Name
+From Production_company
+join Movie_company
+on Movie_company.Company_id = Production_company.Company_id
+join movies
+on movies.movie_id = Movie_company.movie_id;
+
+
+Select * from Table(DBMS_XPLAN.DISPLAY);
+
+
+EXPLAIN PLAN FOR Select Title,publication_year,distributes,review
+From movies
+Where review < 3;
+
+Select * from Table(DBMS_XPLAN.DISPLAY);
+
+EXPLAIN PLAN FOR Select  a.actor_id,a.movie_id, b.movie_id, b.Title
+From cast a join movies b
+on a.Movie_Id = b.Movie_Id;
+
+
+Select * from Table(DBMS_XPLAN.DISPLAY);
+
+Select *from Movies; 
+Select *from Actor;
+Select *from cast;
+Select *from Production_company; 
+Select *from Movie_company;
+Select *from Language;
+Select *from  Movie_Language;
+Select *from  Country;
+Select *from Production_Country;
+Select *from Director;
+Select *from Movie_Director;
+Select *from Categories;
+Select *from Movie_Categories;
